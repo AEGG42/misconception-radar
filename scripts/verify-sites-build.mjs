@@ -29,4 +29,16 @@ if (
   throw new Error("Sites project ID does not match the configured project.");
 }
 
+const worker = await readFile(
+  path.join(root, "dist", "server", "index.js"),
+  "utf8",
+);
+if (
+  worker.includes('from "./') ||
+  worker.includes("import(\"./") ||
+  worker.length < 1_000_000
+) {
+  throw new Error("Sites Worker must be a self-contained Wrangler bundle.");
+}
+
 console.log("Sites build verified: OpenNext worker, assets, and hosting metadata.");

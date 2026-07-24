@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && opennextjs-cloudflare build --skipNextBuild && node scripts/prepare-sites-dist.mjs",
+    "build": "next build && opennextjs-cloudflare build --skipNextBuild && node scripts/bundle-sites-worker.mjs && node scripts/prepare-sites-dist.mjs",
     "build:next": "next build",
     "start": "next start",
     "lint": "eslint .",
