@@ -3,10 +3,13 @@
 
 # next.js
 /.next/
+/.open-next/
+/.wrangler/
 /out/
 
 # production
 /build
+/.sites/
 
 # tests
 /playwright-report/
