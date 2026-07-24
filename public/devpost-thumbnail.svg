@@ -1,0 +1,47 @@
+<svg width="1500" height="1000" viewBox="0 0 1500 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1500" height="1000" fill="#F6F3EB"/>
+  <circle cx="210" cy="130" r="360" fill="#D7FA62" fill-opacity=".42"/>
+  <circle cx="1400" cy="110" r="270" fill="#F26B4F" fill-opacity=".12"/>
+  <path d="M0 140H1500M0 280H1500M0 420H1500M0 560H1500M0 700H1500M0 840H1500M140 0V1000M280 0V1000M420 0V1000M560 0V1000M700 0V1000M840 0V1000M980 0V1000M1120 0V1000M1260 0V1000M1400 0V1000" stroke="#14201F" stroke-opacity=".035"/>
+
+  <g transform="translate(110 92)">
+    <circle cx="40" cy="40" r="39" fill="#D7FA62" stroke="#14201F" stroke-width="2"/>
+    <circle cx="40" cy="40" r="27" stroke="#14201F" stroke-opacity=".28" stroke-width="2"/>
+    <circle cx="40" cy="40" r="15" stroke="#14201F" stroke-opacity=".32" stroke-width="2"/>
+    <path d="M40 40L63 19" stroke="#14201F" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="40" cy="40" r="4" fill="#14201F"/>
+    <text x="100" y="35" fill="#14201F" font-size="28" font-family="Arial, sans-serif" font-weight="800">MISCONCEPTION</text>
+    <text x="100" y="69" fill="#14201F" font-size="28" font-family="Arial, sans-serif" font-weight="800">RADAR</text>
+  </g>
+
+  <text x="110" y="330" fill="#14201F" font-size="104" font-family="Georgia, serif" letter-spacing="-5">See the idea</text>
+  <text x="110" y="438" fill="#14201F" font-size="104" font-family="Georgia, serif" font-style="italic" letter-spacing="-5">beneath the answer.</text>
+  <rect x="113" y="458" width="694" height="20" rx="10" fill="#D7FA62"/>
+  <text x="112" y="544" fill="#52605C" font-size="27" font-family="Arial, sans-serif">Turn short answers into evidence-backed misconception clusters</text>
+  <text x="112" y="582" fill="#52605C" font-size="27" font-family="Arial, sans-serif">and a targeted five-minute reteach plan.</text>
+
+  <g transform="translate(112 690)">
+    <rect width="840" height="162" rx="26" fill="#FFFDF7" stroke="#D9D7CE" stroke-width="2"/>
+    <text x="30" y="42" fill="#65706D" font-size="16" font-family="Arial, sans-serif" font-weight="800" letter-spacing="2">CLASS MISCONCEPTION MAP</text>
+    <rect x="30" y="70" width="510" height="22" rx="11" fill="#F26B4F"/>
+    <rect x="30" y="108" width="330" height="22" rx="11" fill="#E6A23C"/>
+    <rect x="30" y="146" width="0" height="0" fill="none"/>
+    <text x="558" y="87" fill="#14201F" font-size="20" font-family="Arial, sans-serif" font-weight="800">Heavier = more force · 3</text>
+    <text x="378" y="125" fill="#14201F" font-size="20" font-family="Arial, sans-serif" font-weight="800">Motion = more force · 2</text>
+  </g>
+
+  <g transform="translate(1005 296)">
+    <circle cx="190" cy="190" r="186" fill="#14201F"/>
+    <circle cx="190" cy="190" r="132" stroke="#D7FA62" stroke-opacity=".3" stroke-width="2"/>
+    <circle cx="190" cy="190" r="78" stroke="#D7FA62" stroke-opacity=".45" stroke-width="2"/>
+    <circle cx="190" cy="190" r="18" fill="#D7FA62"/>
+    <path d="M190 190L305 77" stroke="#D7FA62" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="305" cy="77" r="12" fill="#F26B4F"/>
+    <path d="M190 4V376M4 190H376" stroke="white" stroke-opacity=".08" stroke-width="2"/>
+  </g>
+
+  <g transform="translate(1010 750)">
+    <rect width="375" height="104" rx="52" fill="#14201F"/>
+    <text x="54" y="63" fill="#D7FA62" font-size="25" font-family="Arial, sans-serif" font-weight="800">EVIDENCE, NOT LABELS</text>
+  </g>
+</svg>
