@@ -6,6 +6,9 @@ const requiredFiles = [
   ".open-next/worker.js",
   ".open-next/assets/BUILD_ID",
   ".openai/hosting.json",
+  "dist/client/BUILD_ID",
+  "dist/server/index.js",
+  "dist/.openai/hosting.json",
 ];
 
 for (const relativePath of requiredFiles) {
@@ -18,7 +21,7 @@ for (const relativePath of requiredFiles) {
 }
 
 const hosting = JSON.parse(
-  await readFile(path.join(root, ".openai", "hosting.json"), "utf8"),
+  await readFile(path.join(root, "dist", ".openai", "hosting.json"), "utf8"),
 );
 if (
   hosting.project_id !== "appgprj_6a636916756c819183908fc9aa0c262c"

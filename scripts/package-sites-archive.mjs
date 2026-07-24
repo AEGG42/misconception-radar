@@ -14,9 +14,9 @@ const result = spawnSync(
   [
     "-czf",
     archivePath,
-    ".open-next",
-    ".openai/hosting.json",
-    "wrangler.jsonc",
+    "-C",
+    "dist",
+    ".",
   ],
   {
     cwd: root,

@@ -9,6 +9,7 @@
 
 # production
 /build
+/dist/
 /.sites/
 
 # tests

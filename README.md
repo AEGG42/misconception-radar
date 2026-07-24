@@ -109,7 +109,8 @@ npm run test:sites
 npm run archive:sites
 ```
 
-These commands generate an ignored `.open-next` build and a deployable
+These commands generate an ignored `.open-next` bundle, a Sites-ready
+`dist/client` + `dist/server/index.js` package, and a deployable
 `.sites/misconception-radar.tar.gz` archive. The committed
 `.openai/hosting.json` contains only the opaque Sites project ID; credentials
 and runtime secrets are never written there.
