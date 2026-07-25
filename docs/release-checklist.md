@@ -6,6 +6,8 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 
 - [x] **July 25:** application foundation, three templates, synthetic data, CSV import, and Devpost draft.
 - [x] **July 26:** deterministic-provider vertical slice from import through dashboard, student evidence, editable approval, reteach generation, and failure fallback. Completed early on July 25.
+- [x] **July 27:** DeepSeek V4 Flash adapter, JSON/Zod validation, one retry, provider routing, human-review states, and reteach contract. Completed early on July 25.
+- [x] **July 28:** 30-case evaluation gate, exceptional flows, labeled snapshot, provider-ready production version 4, and anonymous production smoke test. Completed early on July 25; the live DeepSeek run remains credential-gated.
 
 ## Working release
 
@@ -18,8 +20,9 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 ## External release gates
 
 - [ ] Publish the source to a public GitHub repository and verify it while logged out.
-- [ ] Decide whether the judged build will use the authorized live model or the clearly labeled deterministic baseline.
-- [ ] If live mode is enabled, run the 30-case evaluation three times and record accuracy, score tolerance, variance, latency, and model name.
+- [ ] Add a server-side DeepSeek credential without committing or exposing it.
+- [ ] Run the 30-case DeepSeek evaluation three times and record accuracy, score tolerance, variance, latency, and model name.
+- [ ] Enable DeepSeek in the judged build only if every acceptance threshold passes.
 - [ ] Record and edit the final 1:54 demo video.
 - [ ] Upload the video to YouTube, Vimeo, or Youku with embedding enabled.
 - [ ] Add the public source and video URLs to the app end card, README, and Devpost draft.
