@@ -1,6 +1,9 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const externalServerIsReady = process.env.E2E_SERVER_READY === "1";
+const localChromeChannel = process.env.CI
+  ? {}
+  : { channel: "chrome" as const };
 
 export default defineConfig({
   testDir: "./e2e",
@@ -16,7 +19,7 @@ export default defineConfig({
   projects: [
     {
       name: "chrome",
-      use: { ...devices["Desktop Chrome"], channel: "chrome" },
+      use: { ...devices["Desktop Chrome"], ...localChromeChannel },
     },
   ],
   webServer: externalServerIsReady

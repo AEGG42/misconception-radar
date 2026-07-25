@@ -12,6 +12,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "node scripts/run-e2e.mjs",
+    "test:production": "node scripts/smoke-production.mjs",
     "capture:assets": "node scripts/capture-assets.mjs",
     "build:sites": "npm run build",
     "test:sites": "node scripts/verify-sites-build.mjs",

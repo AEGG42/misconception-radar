@@ -4,6 +4,8 @@
 
 Misconception Radar is a privacy-first formative assessment workspace for high-school physics teachers. It converts a class set of exit-ticket responses into a misconception map, evidence-grounded feedback drafts, and a five-minute reteach plan—while keeping student names in the browser and the teacher in control.
 
+**Live demo:** <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>
+
 ## Why this exists
 
 A score tells a teacher who missed a question. It rarely explains *why*.
@@ -94,6 +96,7 @@ Run the complete verification suite:
 ```bash
 npm run verify
 npm run test:e2e
+npm run test:production
 ```
 
 See [docs/evaluation.md](docs/evaluation.md) for the evaluation design and limitations.
@@ -128,6 +131,7 @@ and runtime secrets are never written there.
 - [Devpost project story](docs/devpost.md)
 - [Two-minute video script and shot list](docs/video-script.md)
 - [Evaluation notes](docs/evaluation.md)
+- [Submission release checklist](docs/release-checklist.md)
 - [Sample class CSV](public/sample-class.csv)
 - [3:2 Devpost thumbnail source](public/devpost-thumbnail.svg)
 

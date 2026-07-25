@@ -8,6 +8,12 @@ Misconception Radar
 
 Turn short answers into evidence-backed misconception clusters and a targeted reteach plan.
 
+## Links
+
+- Application: <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>
+- Source code: **add public GitHub URL before submission**
+- Demo video: **add embeddable video URL before submission**
+
 ## Inspiration
 
 Teachers do not need another dashboard that only says who was right or wrong. After an exit ticket, the useful question is: **what idea is causing these answers, and what should I do in the next five minutes of instruction?**
@@ -70,10 +76,11 @@ Next.js, React, TypeScript, Tailwind CSS, Zod, Papa Parse, Recharts, Vitest, Pla
 
 ## Submission checklist
 
-- [ ] Add public application URL
+- [x] Add public application URL
 - [ ] Add public GitHub URL
 - [ ] Upload `public/devpost-thumbnail.png` as the 3:2 thumbnail
-- [ ] Add dashboard, student-feedback, and reteach screenshots
+- [x] Prepare dashboard, student-feedback, and reteach screenshots
+- [ ] Upload the three prepared screenshots to Devpost
 - [ ] Add final YouTube/Vimeo/Youku URL with embedding enabled
 - [ ] Confirm video runtime is below 2:00
 - [ ] Submit before 2026-07-30 23:45 EDT

@@ -19,7 +19,7 @@ Recording state: collision template, eight-person synthetic class, browser at 10
 | 1:13–1:31 | Open Maya's detail, show original response, exact quote, rubric, edit feedback, approve | “For Maya, the diagnosis is tied to her exact words. I can inspect the rubric, edit the feedback draft, and approve it. Nothing is sent automatically.” |
 | 1:31–1:44 | Click **Generate 5-minute plan**, reveal steps and exit ticket | “One click turns the class's top signal into a five-minute teaching move, a force-diagram task, and a new exit ticket.” |
 | 1:44–1:51 | Four-item architecture overlay | “Bounded expert labels. Structured outputs. Deterministic evidence checks. No student storage.” |
-| 1:51–1:54 | End card with logo, tagline, app URL, repository URL | “Misconception Radar: see the idea beneath the answer.” |
+| 1:51–1:54 | End card with logo, tagline, `misconception-radar-july-ai-2026.aegg42.chatgpt.site`, and the public repository URL | “Misconception Radar: see the idea beneath the answer.” |
 
 ## Edit rules
 
@@ -39,8 +39,8 @@ Recording state: collision template, eight-person synthetic class, browser at 10
 - [ ] Use synthetic names only
 - [ ] Set operating-system scale so UI text is crisp
 - [ ] Preload the app once to avoid cold asset loading
-- [ ] Capture dashboard screenshot at 1920×1080
-- [ ] Capture student-feedback screenshot at 1920×1080
-- [ ] Capture reteach-plan screenshot at 1920×1080
+- [x] Capture dashboard screenshot at 1920×1080
+- [x] Capture student-feedback screenshot at 1920×1080
+- [x] Capture reteach-plan screenshot at 1920×1080
 - [ ] Replace end-card URL placeholders after deployment
 - [ ] Upload as unlisted/public with embedding enabled

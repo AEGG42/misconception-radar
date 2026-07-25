@@ -6,7 +6,7 @@ await mkdir(outputDirectory, { recursive: true });
 
 const browser = await chromium.launch({ channel: "chrome", headless: true });
 const page = await browser.newPage({
-  viewport: { width: 1440, height: 900 },
+  viewport: { width: 1920, height: 1080 },
   deviceScaleFactor: 1,
 });
 
