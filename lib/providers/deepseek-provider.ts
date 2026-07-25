@@ -1,6 +1,7 @@
 import OpenAI from "openai";
 import { z } from "zod";
 
+import { validateStudentAnalyses } from "@/lib/domain/analysis";
 import {
   modelAnalysisSchema,
   reteachModelOutputSchema,
@@ -21,6 +22,7 @@ import {
 } from "@/lib/providers/provider-prompts";
 
 const DEEPSEEK_BASE_URL = "https://api.deepseek.com";
+const RETRY_VALIDATION_INSTRUCTION = `Previous response failed integrity validation. Rebuild the entire JSON object from the user payload. Verify that every supplied studentId appears exactly once, every rubric criterion uses a supplied ID exactly once, rubricScore equals the sum of earned points, and every evidence quote is an exact substring of that student's response.`;
 
 const ANALYSIS_EXAMPLE = {
   students: [
@@ -132,13 +134,14 @@ export class DeepSeekAnalysisProvider implements AnalysisProvider {
       });
   }
 
-  private async requestJson<T>(
+  private async requestJson<TParsed, TResult = TParsed>(
     systemPrompt: string,
     input: unknown,
     schemaName: string,
-    schema: z.ZodType<T>,
+    schema: z.ZodType<TParsed>,
     example: unknown,
-  ): Promise<T> {
+    validate?: (parsed: TParsed) => TResult,
+  ): Promise<TResult> {
     let lastError: unknown;
 
     for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -148,7 +151,11 @@ export class DeepSeekAnalysisProvider implements AnalysisProvider {
           messages: [
             {
               role: "system" as const,
-              content: `${systemPrompt}\n\n${jsonInstructions(
+              content: `${systemPrompt}${
+                attempt === 0
+                  ? ""
+                  : `\n\n${RETRY_VALIDATION_INSTRUCTION}`
+              }\n\n${jsonInstructions(
                 schemaName,
                 schema,
                 example,
@@ -172,7 +179,10 @@ export class DeepSeekAnalysisProvider implements AnalysisProvider {
           throw new Error("DeepSeek returned empty JSON content.");
         }
 
-        return schema.parse(JSON.parse(content));
+        const parsed = schema.parse(JSON.parse(content));
+        return validate
+          ? validate(parsed)
+          : (parsed as unknown as TResult);
       } catch (error) {
         lastError = error;
       }
@@ -193,8 +203,14 @@ export class DeepSeekAnalysisProvider implements AnalysisProvider {
       "class_analysis",
       modelAnalysisSchema,
       ANALYSIS_EXAMPLE,
+      (result) =>
+        validateStudentAnalyses(
+          template,
+          submissions,
+          result.students,
+        ),
     );
-    return result.students;
+    return result;
   }
 
   async generateReteach(

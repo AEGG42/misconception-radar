@@ -1,0 +1,44 @@
+{
+  "generatedAt": "2026-07-25T05:57:41.599Z",
+  "provider": "deepseek",
+  "model": "deepseek-v4-flash",
+  "caseCount": 30,
+  "runs": [
+    {
+      "run": 1,
+      "labelAccuracy": 1,
+      "scoreWithinOne": 0.9667,
+      "integrityPassRate": 1,
+      "durationMs": 70241,
+      "errors": []
+    },
+    {
+      "run": 2,
+      "labelAccuracy": 1,
+      "scoreWithinOne": 0.9667,
+      "integrityPassRate": 1,
+      "durationMs": 72200,
+      "errors": []
+    },
+    {
+      "run": 3,
+      "labelAccuracy": 1,
+      "scoreWithinOne": 0.9667,
+      "integrityPassRate": 1,
+      "durationMs": 67579,
+      "errors": []
+    }
+  ],
+  "aggregate": {
+    "meanLabelAccuracy": 1,
+    "labelAccuracyRange": 0,
+    "meanScoreWithinOne": 0.9667,
+    "scoreWithinOneRange": 0,
+    "integrityPassRate": 1
+  },
+  "reteach": {
+    "passed": true,
+    "misconceptionId": "heavier-more-force",
+    "stepCount": 3
+  }
+}

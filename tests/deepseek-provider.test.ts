@@ -57,6 +57,43 @@ describe("DeepSeekAnalysisProvider", () => {
     expect(request.messages[0].content).toContain("class_analysis");
   });
 
+  it("retries when a parsed analysis fails evidence integrity", async () => {
+    const template = templates.collision;
+    const submissions = [
+      {
+        studentId: "S-01",
+        response:
+          "The truck exerts more force because it has more mass.",
+      },
+    ];
+    const expectedStudents =
+      await new DeterministicAnalysisProvider().analyze(
+        template,
+        submissions,
+      );
+    const invalidStudents = expectedStudents.map((student) => ({
+      ...student,
+      evidenceQuotes: ["This quote was invented by the model."],
+    }));
+    const create = vi
+      .fn()
+      .mockResolvedValueOnce(
+        completion(JSON.stringify({ students: invalidStudents })),
+      )
+      .mockResolvedValueOnce(
+        completion(JSON.stringify({ students: expectedStudents })),
+      );
+    const provider = new DeepSeekAnalysisProvider(clientWith(create));
+
+    await expect(provider.analyze(template, submissions)).resolves.toEqual(
+      expectedStudents,
+    );
+    expect(create).toHaveBeenCalledTimes(2);
+    expect(create.mock.calls[1][0].messages[0].content).toContain(
+      "Previous response failed integrity validation",
+    );
+  });
+
   it("parses a three-step reteach plan through the shared contract", async () => {
     const template = templates.collision;
     const misconception = template.misconceptions[0];

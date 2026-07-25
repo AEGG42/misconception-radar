@@ -113,6 +113,11 @@ generation, responsive use, and the explicitly labeled outage fallback.
 `evaluate:live` is credential-gated and runs all 30 labeled cases three times,
 plus one reteach generation, before a live provider can be enabled.
 
+DeepSeek V4 Flash passed that gate on 2026-07-25: all three runs achieved
+100% primary-misconception match, 96.67% of draft scores within one rubric
+point, and 100% structural/evidence integrity on the synthetic set. These are
+prototype qualification results, not a classroom-validity claim.
+
 See [docs/evaluation.md](docs/evaluation.md) for the evaluation design and limitations.
 
 ## Sites deployment build

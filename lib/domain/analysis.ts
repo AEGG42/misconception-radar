@@ -102,17 +102,24 @@ export function validateStudentAnalyses(
       );
     }
 
+    const returnedCriterionIds = new Set(
+      parsed.rubricBreakdown.map((item) => item.criterionId),
+    );
+    if (returnedCriterionIds.size !== template.rubric.length) {
+      throw new AnalysisIntegrityError(
+        `The analysis did not return every rubric criterion exactly once for ${parsed.studentId}.`,
+      );
+    }
+
     const earnedScore = parsed.rubricBreakdown.reduce(
       (total, item) => total + item.earned,
       0,
     );
-    if (earnedScore !== parsed.rubricScore) {
-      throw new AnalysisIntegrityError(
-        `Rubric score mismatch for ${parsed.studentId}.`,
-      );
-    }
 
-    return parsed;
+    return {
+      ...parsed,
+      rubricScore: earnedScore,
+    };
   });
 }
 

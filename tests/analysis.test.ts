@@ -77,6 +77,21 @@ describe("analysis integrity", () => {
     ).toThrow("Unknown misconception ID");
   });
 
+  it("derives the rubric score from the validated breakdown", () => {
+    const [validated] = validateStudentAnalyses(
+      templates.collision,
+      [
+        {
+          studentId: "S-01",
+          response: "The truck exerts more force because it is heavier.",
+        },
+      ],
+      [analysis({ rubricScore: 4 })],
+    );
+
+    expect(validated.rubricScore).toBe(0);
+  });
+
   it("computes counts and mastery from student-level results", () => {
     const second = analysis({
       studentId: "S-02",

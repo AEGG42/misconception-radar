@@ -21,7 +21,7 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 
 - [ ] Publish the source to a public GitHub repository and verify it while logged out.
 - [ ] Add a server-side DeepSeek credential without committing or exposing it.
-- [ ] Run the 30-case DeepSeek evaluation three times and record accuracy, score tolerance, variance, latency, and model name.
+- [x] Run the 30-case DeepSeek evaluation three times and record accuracy, score tolerance, variance, latency, and model name. Passed on July 25: 100% misconception match, 96.67% score tolerance, and 100% integrity in every run.
 - [ ] Enable DeepSeek in the judged build only if every acceptance threshold passes.
 - [ ] Record and edit the final 1:54 demo video.
 - [ ] Upload the video to YouTube, Vimeo, or Youku with embedding enabled.

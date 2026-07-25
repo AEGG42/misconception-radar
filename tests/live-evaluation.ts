@@ -2,19 +2,50 @@ import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 
-import { validateStudentAnalyses } from "@/lib/domain/analysis";
+import {
+  AnalysisIntegrityError,
+  validateStudentAnalyses,
+} from "@/lib/domain/analysis";
 import { reteachModelOutputSchema } from "@/lib/domain/schemas";
 import { templates } from "@/lib/domain/templates";
 import type { TemplateId } from "@/lib/domain/types";
 import { getAnalysisProvider } from "@/lib/providers";
 import { evaluationCases } from "@/tests/evaluation.test";
 
-const templateIds: TemplateId[] = [
+const allTemplateIds: TemplateId[] = [
   "collision",
   "book-at-rest",
   "elevator",
 ];
-const runCount = 3;
+const configuredTemplateId = process.env.LIVE_EVAL_TEMPLATE_ID;
+const templateIds = configuredTemplateId
+  ? allTemplateIds.filter((id) => id === configuredTemplateId)
+  : allTemplateIds;
+const runCount = Number(process.env.LIVE_EVAL_RUN_COUNT || "3");
+
+function classifyEvaluationError(error: unknown): string {
+  if (!(error instanceof AnalysisIntegrityError)) {
+    return error instanceof Error ? error.constructor.name : "unknown";
+  }
+
+  const categories: Array<[string, string]> = [
+    ["exactly one result", "result-count"],
+    ["Unknown student ID", "unknown-student-id"],
+    ["Duplicate student ID", "duplicate-student-id"],
+    ["Unknown misconception ID", "unknown-misconception-id"],
+    ["Evidence for", "evidence-quote-mismatch"],
+    ["unknown rubric criterion", "unknown-rubric-criterion"],
+    [
+      "every rubric criterion exactly once",
+      "rubric-criterion-cardinality",
+    ],
+  ];
+
+  return (
+    categories.find(([message]) => error.message.includes(message))?.[1] ??
+    "other-integrity-error"
+  );
+}
 
 function roundMetric(value: number) {
   return Math.round(value * 10_000) / 10_000;
@@ -25,6 +56,12 @@ describe("live provider evaluation", () => {
     const provider = await getAnalysisProvider();
     expect(provider.kind).not.toBe("deterministic");
     expect(provider.kind).not.toBe("sample-snapshot");
+    expect(templateIds.length).toBeGreaterThan(0);
+    expect(Number.isInteger(runCount) && runCount > 0).toBe(true);
+
+    const selectedCases = evaluationCases.filter((testCase) =>
+      templateIds.includes(testCase.templateId),
+    );
 
     const runs = [];
 
@@ -35,6 +72,7 @@ describe("live provider evaluation", () => {
       const errors: Array<{
         templateId: TemplateId;
         errorType: string;
+        errorCategory: string;
       }> = [];
       const startedAt = performance.now();
 
@@ -90,6 +128,7 @@ describe("live provider evaluation", () => {
               error instanceof Error
                 ? error.constructor.name
                 : "UnknownError",
+            errorCategory: classifyEvaluationError(error),
           });
         }
       }
@@ -97,13 +136,13 @@ describe("live provider evaluation", () => {
       const run = {
         run: runIndex + 1,
         labelAccuracy: roundMetric(
-          labelMatches / evaluationCases.length,
+          labelMatches / selectedCases.length,
         ),
         scoreWithinOne: roundMetric(
-          scoresWithinOne / evaluationCases.length,
+          scoresWithinOne / selectedCases.length,
         ),
         integrityPassRate: roundMetric(
-          integrityPasses / evaluationCases.length,
+          integrityPasses / selectedCases.length,
         ),
         durationMs: Math.round(performance.now() - startedAt),
         errors,
@@ -149,7 +188,7 @@ describe("live provider evaluation", () => {
       generatedAt: new Date().toISOString(),
       provider: provider.kind,
       model: provider.model,
-      caseCount: evaluationCases.length,
+      caseCount: selectedCases.length,
       runs,
       aggregate: {
         meanLabelAccuracy: roundMetric(

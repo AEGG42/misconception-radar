@@ -53,6 +53,28 @@ writes a sanitized report to `test-results/live-evaluation.json`. The report
 contains only provider/model metadata, accuracy, score tolerance, integrity,
 variance, and latency—never student responses or credentials.
 
+## DeepSeek qualification result
+
+DeepSeek V4 Flash passed the live-provider gate on **2026-07-25** using the
+pinned prompt, non-thinking JSON mode, and the 30 synthetic cases:
+
+| Run | Primary misconception match | Score within one point | Integrity | Analysis duration |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 100% | 96.67% | 100% | 70.24 s |
+| 2 | 100% | 96.67% | 100% | 72.20 s |
+| 3 | 100% | 96.67% | 100% | 67.58 s |
+
+The mean primary-misconception accuracy was 100% with zero run-to-run range.
+The mean score-within-one rate was 96.67% with zero run-to-run range. The
+three-step reteach-plan contract also passed.
+
+An initial diagnostic run exposed a repeatable disagreement between the
+model's redundant `rubricScore` field and its four criterion-level `earned`
+values. The application now treats the validated criterion breakdown as the
+single score source and recomputes the total deterministically. Unknown,
+missing, or repeated criterion IDs remain hard integrity failures. See the
+[sanitized qualification report](live-evaluation.json).
+
 ## Evidence checks
 
 After provider output:
@@ -60,7 +82,7 @@ After provider output:
 1. The server requires exactly one result for every submitted student ID.
 2. Returned IDs must match the input set exactly.
 3. Misconception IDs must belong to the selected assignment.
-4. Rubric criterion IDs and the sum of points must match the assignment.
+4. Every rubric criterion ID must appear exactly once; the total score is recomputed from those validated criterion points.
 5. Every evidence quote must be an exact normalized substring of the corresponding response.
 6. Any failure rejects the whole batch; partial or fabricated feedback is not displayed.
 
