@@ -8,12 +8,12 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 - [x] **July 26:** deterministic-provider vertical slice from import through dashboard, student evidence, editable approval, reteach generation, and failure fallback. Completed early on July 25.
 - [x] **July 27:** DeepSeek V4 Flash adapter, JSON/Zod validation, one retry, provider routing, human-review states, and reteach contract. Completed early on July 25.
 - [x] **July 28:** 30-case evaluation gate, exceptional flows, labeled snapshot, DeepSeek production version 5, and anonymous production smoke test. Completed early on July 25.
-- [x] **July 29:** feature freeze, coherent three-student demo cluster, spreadsheet-safe feedback export, 390 px responsive verification, README/Devpost polish, refreshed live-AI screenshots, and draft video overlays. Completed early on July 25.
+- [x] **July 29:** feature freeze, coherent three-student demo cluster, spreadsheet-safe feedback export, 390 px responsive verification, README/Devpost polish, refreshed live-AI screenshots, draft video overlays, and production version 6. Completed early on July 25.
 
 ## Working release
 
 - [x] Public application: <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>
-- [x] Public homepage, DeepSeek analysis API, and DeepSeek reteach API pass an anonymous synthetic-data smoke test.
+- [x] Production version 6 homepage, DeepSeek analysis API, and DeepSeek reteach API pass an anonymous synthetic-data smoke test.
 - [x] Three physics templates, synthetic demo data, CSV import, evidence-backed diagnostics, teacher review, reteach plan, and feedback export are implemented.
 - [x] Lint, strict TypeScript, unit/contract tests, browser tests, and the Sites production package pass locally.
 - [x] Devpost thumbnail and three product screenshots are prepared.

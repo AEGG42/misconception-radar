@@ -49,7 +49,8 @@ reteach focus, screenshots, and narration all describe the same signal.
   aggregation, model contracts, and the fixed demo cluster.
 - Playwright covers upload, analysis, evidence review, editing, approval,
   export, reteach, outage fallback, and 390 px responsive use.
-- The production smoke test must return `provider: deepseek` before release.
+- Production version 6 returned `provider: deepseek`; homepage, analysis, and
+  reteach checks were HTTP 200, with evidence and all three reteach steps.
 
 ## Remaining submission-only work
 
