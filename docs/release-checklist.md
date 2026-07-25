@@ -2,6 +2,11 @@
 
 Last reviewed: **2026-07-25 (Asia/Shanghai)**
 
+## Schedule progress
+
+- [x] **July 25:** application foundation, three templates, synthetic data, CSV import, and Devpost draft.
+- [x] **July 26:** deterministic-provider vertical slice from import through dashboard, student evidence, editable approval, reteach generation, and failure fallback. Completed early on July 25.
+
 ## Working release
 
 - [x] Public application: <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>

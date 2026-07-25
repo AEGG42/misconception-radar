@@ -99,6 +99,10 @@ npm run test:e2e
 npm run test:production
 ```
 
+The Playwright suite follows CSV data through anonymous analysis, the
+misconception dashboard, student evidence, local feedback approval, reteach
+generation, responsive use, and the explicitly labeled outage fallback.
+
 See [docs/evaluation.md](docs/evaluation.md) for the evaluation design and limitations.
 
 ## Sites deployment build

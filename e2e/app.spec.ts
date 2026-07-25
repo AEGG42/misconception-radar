@@ -38,7 +38,9 @@ test("demo class completes the diagnostic and reteach flow", async ({
   await expect(page.getByText("Exit ticket", { exact: true })).toBeVisible();
 });
 
-test("a valid CSV is previewed before analysis", async ({ page }) => {
+test("a valid CSV stays anonymous through analysis and teacher review", async ({
+  page,
+}) => {
   await page.goto("/");
   await page.getByLabel("Upload student response CSV").setInputFiles({
     name: "class.csv",
@@ -46,7 +48,8 @@ test("a valid CSV is previewed before analysis", async ({ page }) => {
     buffer: Buffer.from(
       [
         "student_id,student_name,response",
-        'S-10,Ada,"They exert equal forces in opposite directions on each other."',
+        'S-10,Ada,"The truck exerts more force because it has much more mass."',
+        'S-11,Ben,"They exert equal forces in opposite directions on each other."',
       ].join("\n"),
     ),
   });
@@ -54,7 +57,50 @@ test("a valid CSV is previewed before analysis", async ({ page }) => {
   await expect(page.getByText("Ada", { exact: true })).toBeVisible();
   await expect(page.getByText("Responses ready")).toBeVisible();
   await expect(
-    page.getByText("They exert equal forces in opposite directions"),
+    page.getByText("The truck exerts more force because"),
+  ).toBeVisible();
+
+  const analyzeRequestPromise = page.waitForRequest("**/api/analyze");
+  await page.getByRole("button", { name: /Analyze class/i }).click();
+  const analyzeRequest = await analyzeRequestPromise;
+  expect(analyzeRequest.postDataJSON()).toEqual({
+    templateId: "collision",
+    submissions: [
+      {
+        studentId: "S-10",
+        response:
+          "The truck exerts more force because it has much more mass.",
+      },
+      {
+        studentId: "S-11",
+        response:
+          "They exert equal forces in opposite directions on each other.",
+      },
+    ],
+  });
+
+  await expect(page.getByText("Misconception map")).toBeVisible();
+  await page.getByRole("button", { name: /Ada/i }).click();
+  const studentPanel = page.getByRole("complementary");
+  await expect(studentPanel.getByText("Original response")).toBeVisible();
+  await expect(
+    studentPanel
+      .getByText(
+        /The truck exerts more force because it has much more mass\./,
+      )
+      .first(),
+  ).toBeVisible();
+  await expect(
+    studentPanel.getByText(/Evidence: “The truck exerts more force/i),
+  ).toBeVisible();
+
+  const feedback = page.getByLabel(/Feedback draft/i);
+  await feedback.fill(
+    "Compare the two forces in this single interaction, then explain the different accelerations.",
+  );
+  await page.getByRole("button", { name: "Approve draft" }).click();
+  await expect(
+    page.getByRole("button", { name: /Feedback approved locally/i }),
   ).toBeVisible();
 });
 
@@ -82,6 +128,45 @@ test("sample snapshot is explicitly labeled", async ({ page }) => {
     .getByRole("button", { name: "Use sample snapshot" })
     .click();
 
+  await expect(page.getByText("Sample snapshot", { exact: true })).toBeVisible();
+  await expect(
+    page.getByText(/This is not a live model result/i),
+  ).toBeVisible();
+});
+
+test("an analysis outage preserves responses and offers the labeled fallback", async ({
+  page,
+}) => {
+  await page.route("**/api/analyze", async (route) => {
+    await route.fulfill({
+      status: 503,
+      contentType: "application/json",
+      body: JSON.stringify({
+        error:
+          "The analysis service is unavailable. Your responses are still in the browser.",
+      }),
+    });
+  });
+
+  await page.goto("/");
+  await page.getByRole("button", { name: "Load demo class" }).click();
+  await page.getByRole("button", { name: /Analyze class/i }).click();
+
+  const alert = page
+    .getByRole("alert")
+    .filter({ hasText: "Analysis paused" });
+  await expect(alert).toContainText("Analysis paused");
+  await expect(alert).toContainText(
+    "Your responses are still in the browser",
+  );
+  await expect(page.getByText("Responses ready")).toBeVisible();
+  await expect(page.getByText("Maya", { exact: true })).toBeVisible();
+
+  await alert
+    .getByRole("button", {
+      name: "Use the clearly labeled sample snapshot",
+    })
+    .click();
   await expect(page.getByText("Sample snapshot", { exact: true })).toBeVisible();
   await expect(
     page.getByText(/This is not a live model result/i),
