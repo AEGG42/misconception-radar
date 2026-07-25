@@ -32,6 +32,7 @@ npm ci
 npm run verify
 npm run test:e2e
 npm run test:production
+npm run evaluate:live
 ```
 
 The production smoke test uses only synthetic responses. Override its target

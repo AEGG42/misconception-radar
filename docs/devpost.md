@@ -37,7 +37,7 @@ Teachers can load a synthetic demo class or upload a CSV with up to 20 students.
 
 The application is a single Next.js 16 and TypeScript project. Papa Parse validates the CSV in the browser, then removes names before sending anonymous IDs and responses to the server.
 
-All diagnostic providers implement one `AnalysisProvider` contract. The submission ships with a transparent, rule-grounded demo provider and a separate optional OpenAI Responses API adapter for structured model output. Both must return the same Zod-validated schema.
+All diagnostic providers implement one `AnalysisProvider` contract. The submission ships with a transparent, rule-grounded demo provider, a DeepSeek V4 Flash adapter using JSON Output, and an alternate OpenAI Responses API adapter. Every provider must return the same Zod-validated schema.
 
 We do not trust generated aggregates. The server checks every ID, misconception enum, rubric sum, and evidence quote, then independently computes class counts, mastery, and review totals. Evidence must be an exact substring of the student's answer or the result is rejected.
 
@@ -72,7 +72,7 @@ Next we would co-design additional misconception taxonomies with classroom teach
 
 ## Built with
 
-Next.js, React, TypeScript, Tailwind CSS, Zod, Papa Parse, Recharts, Vitest, Playwright, OpenAI Responses API adapter
+Next.js, React, TypeScript, Tailwind CSS, Zod, Papa Parse, Recharts, Vitest, Playwright, DeepSeek API, OpenAI-compatible SDK
 
 ## Submission checklist
 

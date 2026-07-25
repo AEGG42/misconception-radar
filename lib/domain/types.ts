@@ -2,7 +2,11 @@ export type TemplateId = "collision" | "book-at-rest" | "elevator";
 
 export type Confidence = "high" | "medium" | "low";
 
-export type ProviderKind = "deterministic" | "openai" | "sample-snapshot";
+export type ProviderKind =
+  | "deterministic"
+  | "deepseek"
+  | "openai"
+  | "sample-snapshot";
 
 export interface RubricCriterion {
   id: string;

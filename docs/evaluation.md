@@ -36,6 +36,23 @@ Run with:
 npm run test
 ```
 
+## Live-provider gate
+
+The live evaluator batches the 30 cases by assignment and repeats the complete
+set three times. It also validates one generated reteach plan. Configure a
+server-side provider key in the ignored `.env.local`, then run:
+
+```bash
+npm run evaluate:live
+```
+
+The default live provider is `deepseek` with `deepseek-v4-flash`; set
+`LIVE_EVAL_PROVIDER=openai` only when intentionally evaluating the alternate
+adapter. The runner enables live mode only for the evaluation process and
+writes a sanitized report to `test-results/live-evaluation.json`. The report
+contains only provider/model metadata, accuracy, score tolerance, integrity,
+variance, and latency—never student responses or credentials.
+
 ## Evidence checks
 
 After provider output:

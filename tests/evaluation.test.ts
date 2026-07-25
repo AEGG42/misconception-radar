@@ -4,14 +4,14 @@ import { templates } from "@/lib/domain/templates";
 import type { TemplateId } from "@/lib/domain/types";
 import { DeterministicAnalysisProvider } from "@/lib/providers/deterministic-provider";
 
-interface EvalCase {
+export interface EvaluationCase {
   templateId: TemplateId;
   response: string;
   expectedMisconception: string | null;
   expectedScore: number;
 }
 
-const cases: EvalCase[] = [
+export const evaluationCases: EvaluationCase[] = [
   {
     templateId: "collision",
     response:
@@ -224,7 +224,7 @@ describe("30-case deterministic evaluation set", () => {
     let labelMatches = 0;
     let scoreWithinOne = 0;
 
-    for (const [index, testCase] of cases.entries()) {
+    for (const [index, testCase] of evaluationCases.entries()) {
       const [result] = await provider.analyze(
         templates[testCase.templateId],
         [
@@ -246,10 +246,10 @@ describe("30-case deterministic evaluation set", () => {
       }
     }
 
-    const labelAccuracy = labelMatches / cases.length;
-    const scoreTolerance = scoreWithinOne / cases.length;
+    const labelAccuracy = labelMatches / evaluationCases.length;
+    const scoreTolerance = scoreWithinOne / evaluationCases.length;
 
-    expect(cases).toHaveLength(30);
+    expect(evaluationCases).toHaveLength(30);
     expect(labelAccuracy).toBeGreaterThanOrEqual(0.85);
     expect(scoreTolerance).toBeGreaterThanOrEqual(0.9);
   });

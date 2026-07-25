@@ -66,6 +66,10 @@ const engineLabels = {
     label: "Rule-grounded demo",
     tone: "bg-[#e9f5f2] text-[#1e7569] border-[#bfe2db]",
   },
+  deepseek: {
+    label: "Live DeepSeek AI",
+    tone: "bg-[#e8efff] text-[#274c8e] border-[#c3d4f5]",
+  },
   openai: {
     label: "Live structured AI",
     tone: "bg-[#ecf6cf] text-[#506716] border-[#d2e79d]",
