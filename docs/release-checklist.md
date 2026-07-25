@@ -7,12 +7,12 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 - [x] **July 25:** application foundation, three templates, synthetic data, CSV import, and Devpost draft.
 - [x] **July 26:** deterministic-provider vertical slice from import through dashboard, student evidence, editable approval, reteach generation, and failure fallback. Completed early on July 25.
 - [x] **July 27:** DeepSeek V4 Flash adapter, JSON/Zod validation, one retry, provider routing, human-review states, and reteach contract. Completed early on July 25.
-- [x] **July 28:** 30-case evaluation gate, exceptional flows, labeled snapshot, provider-ready production version 4, and anonymous production smoke test. Completed early on July 25; the live DeepSeek run remains credential-gated.
+- [x] **July 28:** 30-case evaluation gate, exceptional flows, labeled snapshot, DeepSeek production version 5, and anonymous production smoke test. Completed early on July 25.
 
 ## Working release
 
 - [x] Public application: <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>
-- [x] Public homepage, analysis API, and reteach API pass an anonymous smoke test.
+- [x] Public homepage, DeepSeek analysis API, and DeepSeek reteach API pass an anonymous synthetic-data smoke test.
 - [x] Three physics templates, synthetic demo data, CSV import, evidence-backed diagnostics, teacher review, reteach plan, and feedback export are implemented.
 - [x] Lint, strict TypeScript, unit/contract tests, browser tests, and the Sites production package pass locally.
 - [x] Devpost thumbnail and three product screenshots are prepared.
@@ -20,9 +20,9 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 ## External release gates
 
 - [ ] Publish the source to a public GitHub repository and verify it while logged out.
-- [ ] Add a server-side DeepSeek credential without committing or exposing it.
+- [x] Add a server-side DeepSeek credential without committing or exposing it.
 - [x] Run the 30-case DeepSeek evaluation three times and record accuracy, score tolerance, variance, latency, and model name. Passed on July 25: 100% misconception match, 96.67% score tolerance, and 100% integrity in every run.
-- [ ] Enable DeepSeek in the judged build only if every acceptance threshold passes.
+- [x] Enable DeepSeek in the judged build only if every acceptance threshold passes. Production version 5 uses environment revision 2.
 - [ ] Record and edit the final 1:54 demo video.
 - [ ] Upload the video to YouTube, Vimeo, or Youku with embedding enabled.
 - [ ] Add the public source and video URLs to the app end card, README, and Devpost draft.

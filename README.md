@@ -6,6 +6,10 @@ Misconception Radar is a privacy-first formative assessment workspace for high-s
 
 **Live demo:** <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>
 
+The judged build runs server-side DeepSeek V4 Flash for live analysis and
+reteach generation, with an explicitly labeled sample snapshot as its outage
+fallback.
+
 ## Why this exists
 
 A score tells a teacher who missed a question. It rarely explains *why*.
