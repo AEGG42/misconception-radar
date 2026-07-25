@@ -100,6 +100,17 @@ export function anonymizeRecords(
   return records.map(({ studentId, response }) => ({ studentId, response }));
 }
 
+export function serializeCsvCell(
+  value: string | number | boolean,
+): string {
+  const raw = String(value);
+  const spreadsheetSafe =
+    typeof value === "string" && /^(?:\s*[=+\-@]|\t|\r)/.test(raw)
+      ? `'${raw}`
+      : raw;
+  return `"${spreadsheetSafe.replaceAll('"', '""')}"`;
+}
+
 export function recordsToCsv(records: StudentRecord[]): string {
   return Papa.unparse(
     records.map(({ studentId, studentName, response }) => ({

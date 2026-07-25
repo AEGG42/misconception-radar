@@ -37,9 +37,9 @@ Teachers can load a synthetic demo class or upload a CSV with up to 20 students.
 
 The application is a single Next.js 16 and TypeScript project. Papa Parse validates the CSV in the browser, then removes names before sending anonymous IDs and responses to the server.
 
-All diagnostic providers implement one `AnalysisProvider` contract. The submission ships with a transparent, rule-grounded demo provider, a DeepSeek V4 Flash adapter using JSON Output, and an alternate OpenAI Responses API adapter. Every provider must return the same Zod-validated schema.
+All diagnostic providers implement one `AnalysisProvider` contract. The judged build runs a DeepSeek V4 Flash adapter using JSON Output, while a transparent rule-grounded provider supports local development and an alternate OpenAI Responses API adapter demonstrates portability. Every provider must return the same Zod-validated schema.
 
-We do not trust generated aggregates. The server checks every ID, misconception enum, rubric sum, and evidence quote, then independently computes class counts, mastery, and review totals. Evidence must be an exact substring of the student's answer or the result is rejected.
+We do not trust generated aggregates. The server checks every ID, misconception enum, rubric criterion, and evidence quote. It deterministically derives each total score from the validated criterion breakdown, then independently computes class counts, mastery, and review totals. Evidence must be an exact substring of the student's answer or the result is rejected.
 
 The dashboard is built with React, Tailwind CSS, and Recharts. Vitest covers the domain and API contracts, while Playwright covers the complete teacher flow.
 
@@ -51,12 +51,15 @@ The second challenge was making generated feedback inspectable. We solved that b
 
 Finally, we designed a demo that remains honest during provider outages. The fixed synthetic sample snapshot is a separate, explicit action and is clearly labeled as non-live.
 
+During live qualification, we also found that the model could return a total score that disagreed with its own criterion-level points. Rather than spending another model call on a redundant number, we made the validated criterion breakdown the single score source and recompute the total in application code.
+
 ## Accomplishments that we're proud of
 
 - A complete classroom loop from CSV to actionable reteach plan.
 - Student names are never sent to the server.
 - Every feedback draft is tied to exact evidence from the original response.
 - Thirty human-labeled synthetic evaluation cases cover three assignments and five misconception patterns per assignment.
+- DeepSeek V4 Flash passed three complete qualification runs with 100% primary-misconception match, 96.67% of draft scores within one point, and 100% structural/evidence integrity on the synthetic set.
 - The same typed contract supports a deterministic baseline and an authorized structured-output model without changing the UI.
 - Production build, lint, strict TypeScript, domain tests, API contract tests, and end-to-end browser tests are included.
 

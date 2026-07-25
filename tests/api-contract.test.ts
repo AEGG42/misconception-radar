@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { POST as analyze } from "@/app/api/analyze/route";
 import { POST as reteach } from "@/app/api/reteach/route";
+import { POST as sample } from "@/app/api/sample/route";
 
 describe("API contracts", () => {
   it("returns anonymized student analysis and deterministic summary", async () => {
@@ -91,5 +92,26 @@ describe("API contracts", () => {
     );
 
     expect(response.status).toBe(400);
+  });
+
+  it("keeps the fixed demo snapshot centered on a three-student cluster", async () => {
+    const response = await sample(
+      new Request("http://localhost/api/sample", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ templateId: "collision" }),
+      }),
+    );
+    const payload = await response.json();
+    const topMisconception = payload.summary.misconceptionCounts.find(
+      (item: { id: string }) => item.id === "heavier-more-force",
+    );
+
+    expect(response.status).toBe(200);
+    expect(payload.metadata.provider).toBe("sample-snapshot");
+    expect(payload.summary.topMisconceptionId).toBe(
+      "heavier-more-force",
+    );
+    expect(topMisconception.count).toBe(3);
   });
 });

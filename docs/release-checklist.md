@@ -8,6 +8,7 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 - [x] **July 26:** deterministic-provider vertical slice from import through dashboard, student evidence, editable approval, reteach generation, and failure fallback. Completed early on July 25.
 - [x] **July 27:** DeepSeek V4 Flash adapter, JSON/Zod validation, one retry, provider routing, human-review states, and reteach contract. Completed early on July 25.
 - [x] **July 28:** 30-case evaluation gate, exceptional flows, labeled snapshot, DeepSeek production version 5, and anonymous production smoke test. Completed early on July 25.
+- [x] **July 29:** feature freeze, coherent three-student demo cluster, spreadsheet-safe feedback export, 390 px responsive verification, README/Devpost polish, refreshed live-AI screenshots, and draft video overlays. Completed early on July 25.
 
 ## Working release
 

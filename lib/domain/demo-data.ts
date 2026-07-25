@@ -30,7 +30,7 @@ export const demoClasses: Record<TemplateId, StudentRecord[]> = {
       studentId: "S-05",
       studentName: "Sofia",
       response:
-        "The faster vehicle hits harder, so whichever one is moving faster exerts the larger force.",
+        "The truck exerts more force because its larger mass makes it hit harder.",
     },
     {
       studentId: "S-06",
@@ -42,7 +42,7 @@ export const demoClasses: Record<TemplateId, StudentRecord[]> = {
       studentId: "S-07",
       studentName: "Priya",
       response:
-        "I think the truck pushes harder because it is heavier, but Newton's third law says the forces might be equal.",
+        "The truck exerts more force because it is heavier, although Newton's third law says the forces might be equal.",
     },
     {
       studentId: "S-08",

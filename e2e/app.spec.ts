@@ -1,3 +1,4 @@
+import { readFile } from "node:fs/promises";
 import { expect, test } from "@playwright/test";
 
 test("demo class completes the diagnostic and reteach flow", async ({
@@ -19,6 +20,14 @@ test("demo class completes the diagnostic and reteach flow", async ({
   ).toBeVisible();
   await expect(page.getByText("Rule-grounded demo")).toBeVisible();
   await expect(page.getByText("Misconception map")).toBeVisible();
+  const topMisconceptionCard = page
+    .getByText("Top misconception")
+    .locator("..")
+    .locator("..");
+  await expect(topMisconceptionCard).toContainText("3");
+  await expect(topMisconceptionCard).toContainText(
+    "Heavier = more force",
+  );
 
   await page.getByRole("button", { name: /Maya/i }).click();
   const feedback = page.getByLabel(/Feedback draft/i);
@@ -30,6 +39,25 @@ test("demo class completes the diagnostic and reteach flow", async ({
   await expect(
     page.getByRole("button", { name: /Feedback approved locally/i }),
   ).toBeVisible();
+
+  const downloadPromise = page.waitForEvent("download");
+  await page.getByRole("button", { name: /Export feedback/i }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe(
+    "misconception-radar-collision-feedback.csv",
+  );
+  const downloadPath = await download.path();
+  expect(downloadPath).not.toBeNull();
+  const exportedCsv = await readFile(downloadPath!, "utf8");
+  expect(exportedCsv.charCodeAt(0)).toBe(0xfeff);
+  expect(exportedCsv).toContain(
+    "You connected force to mass. Now compare the two forces in one interaction.",
+  );
+  expect(
+    exportedCsv
+      .split(/\r?\n/)
+      .find((row) => row.includes('"Maya"')),
+  ).toContain('"true"');
 
   await page
     .getByRole("button", { name: /Generate 5-minute plan/i })
@@ -184,6 +212,11 @@ test("the core demo remains usable at a 390px mobile viewport", async ({
       name: /See what your class actually misunderstands/i,
     }),
   ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
   await page.getByRole("button", { name: "Load demo class" }).click();
   await expect(page.getByText("Responses ready")).toBeVisible();
   await page.getByRole("button", { name: /Analyze class/i }).click();
@@ -192,4 +225,9 @@ test("the core demo remains usable at a 390px mobile viewport", async ({
   await expect(
     page.getByRole("button", { name: /Generate 5-minute plan/i }),
   ).toBeVisible();
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
 });

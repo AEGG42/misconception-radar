@@ -24,7 +24,7 @@ Misconception Radar looks beneath each answer for a bounded, teacher-reviewed co
 4. Inspect the class misconception map and the exact response evidence behind each draft.
 5. Review, edit, and approve individual feedback locally.
 6. Generate a targeted five-minute reteach plan and exit ticket.
-7. Export the teacher-reviewed feedback as CSV.
+7. Export the teacher-reviewed feedback as a spreadsheet-safe UTF-8 CSV.
 
 ## Run locally
 
@@ -155,6 +155,7 @@ and runtime secrets are never written there.
 - [Devpost project story](docs/devpost.md)
 - [Two-minute video script and shot list](docs/video-script.md)
 - [Evaluation notes](docs/evaluation.md)
+- [July 29 feature-freeze scope](docs/feature-freeze.md)
 - [Submission release checklist](docs/release-checklist.md)
 - [Sample class CSV](public/sample-class.csv)
 - [3:2 Devpost thumbnail source](public/devpost-thumbnail.svg)

@@ -9,7 +9,6 @@ import {
   Check,
   CheckCircle2,
   ChevronRight,
-  Clock3,
   Download,
   Eye,
   FileText,
@@ -39,6 +38,7 @@ import {
 import {
   anonymizeRecords,
   parseStudentCsv,
+  serializeCsvCell,
 } from "@/lib/domain/csv";
 import { getDemoClass } from "@/lib/domain/demo-data";
 import {
@@ -256,7 +256,7 @@ function SetupWorkspace({
             </p>
             <div className="mt-5 flex flex-wrap gap-4 text-xs font-bold text-[#5c6663]">
               <span className="flex items-center gap-1.5">
-                <Clock3 className="size-4" /> Under 30 seconds
+                <Users className="size-4" /> Up to 20 responses
               </span>
               <span className="flex items-center gap-1.5">
                 <Eye className="size-4" /> Human-reviewed
@@ -934,10 +934,20 @@ function ResultsDashboard({
   onReset: () => void;
 }) {
   const template = templates[templateId];
-  const [selectedStudentId, setSelectedStudentId] = useState(
-    analysis.students.find((item) => item.needsReview)?.studentId ??
-      analysis.students[0]?.studentId,
-  );
+  const [selectedStudentId, setSelectedStudentId] = useState(() => {
+    const topMisconceptionStudent = analysis.summary.topMisconceptionId
+      ? analysis.students.find(
+          (item) =>
+            item.primaryMisconceptionId ===
+            analysis.summary.topMisconceptionId,
+        )
+      : undefined;
+    return (
+      topMisconceptionStudent?.studentId ??
+      analysis.students.find((item) => item.needsReview)?.studentId ??
+      analysis.students[0]?.studentId
+    );
+  });
   const [selectedMisconceptionId, setSelectedMisconceptionId] = useState(
     analysis.summary.topMisconceptionId,
   );
@@ -969,6 +979,11 @@ function ResultsDashboard({
   const selectedStudent = recordById.get(selectedStudentId);
   const selectedStudentAnalysis = analysisById.get(selectedStudentId);
   const engine = engineLabels[analysis.metadata.provider];
+  const topMisconception = analysis.summary.topMisconceptionId
+    ? analysis.summary.misconceptionCounts.find(
+        (item) => item.id === analysis.summary.topMisconceptionId,
+      )
+    : undefined;
   const chartData = analysis.summary.misconceptionCounts.map((item) => ({
     ...item,
     displayLabel:
@@ -988,8 +1003,6 @@ function ResultsDashboard({
       "probing_question",
       "approved",
     ];
-    const escapeCell = (value: string | number | boolean) =>
-      `"${String(value).replaceAll('"', '""')}"`;
     const rows = analysis.students.map((item) => {
       const record = recordById.get(item.studentId);
       const misconception = template.misconceptions.find(
@@ -1005,10 +1018,10 @@ function ResultsDashboard({
         item.probingQuestion,
         approvedIds.has(item.studentId),
       ]
-        .map(escapeCell)
+        .map(serializeCsvCell)
         .join(",");
     });
-    const csv = [headers.join(","), ...rows].join("\r\n");
+    const csv = `\uFEFF${[headers.join(","), ...rows].join("\r\n")}`;
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
@@ -1103,13 +1116,8 @@ function ResultsDashboard({
             />
             <MetricCard
               label="Top misconception"
-              value={String(
-                analysis.summary.misconceptionCounts[0]?.count ?? 0,
-              )}
-              detail={
-                analysis.summary.misconceptionCounts[0]?.shortLabel ??
-                "No dominant pattern"
-              }
+              value={String(topMisconception?.count ?? 0)}
+              detail={topMisconception?.shortLabel ?? "No dominant pattern"}
               icon={<Radar className="size-4" />}
               accent="coral"
             />
