@@ -17,16 +17,16 @@ in the edited wait captions.
 
 | Time | Picture | Narration |
 | --- | --- | --- |
-| 0:00–0:09 | Cold open on eight paper exit tickets, then title card | “Twenty exit tickets. Ten minutes before the next class. Who got it wrong is easy. What does the class actually misunderstand?” |
+| 0:00–0:09 | Cold open on eight paper exit tickets, then title card | “Twenty exit tickets. Ten minutes before class. Who got it wrong is easy. What does the class misunderstand?” |
 | 0:09–0:20 | Landing page; cursor highlights the tagline | “Misconception Radar turns short physics answers into an evidence-backed misconception map and a targeted reteach plan.” |
 | 0:20–0:33 | Select the car–truck collision prompt and click **Load demo class** | “I choose a bounded Newton's third-law prompt and load eight synthetic responses. Names stay in this browser; only anonymous IDs and answers are analyzed.” |
-| 0:33–0:40 | Click **Analyze class**; cut the wait cleanly | “Structured DeepSeek analysis compares each explanation with a teacher-reviewed rubric and misconception taxonomy.” |
+| 0:33–0:40 | Click **Analyze class**; cut the wait cleanly | “DeepSeek compares each explanation with a teacher-reviewed rubric and misconception taxonomy.” |
 | 0:40–0:58 | Results hero and four metric cards; settle on chart | “Now I can see the class pattern: mastery, draft scores, review flags, and the most common underlying ideas—not just right and wrong.” |
 | 0:58–1:13 | Click **Heavier = more force** in the map | “Three students are using mass to decide the size of an interaction force. The count is recomputed in code from student-level results.” |
 | 1:13–1:31 | Open Maya's detail, show original response, exact quote, rubric, edit feedback, approve | “For Maya, the diagnosis is tied to her exact words. I can inspect the rubric, edit the feedback draft, and approve it. Nothing is sent automatically.” |
 | 1:31–1:44 | Click **Generate 5-minute plan**, reveal steps and exit ticket | “One click turns the class's top signal into a five-minute teaching move, a force-diagram task, and a new exit ticket.” |
-| 1:44–1:51 | Use `public/video-architecture-overlay.svg` | “Bounded expert labels. Structured DeepSeek output. Deterministic evidence checks. Names stay in the browser.” |
-| 1:51–1:54 | End card with logo, tagline, `misconception-radar-july-ai-2026.aegg42.chatgpt.site`, and the public repository URL | “Misconception Radar: see the idea beneath the answer.” |
+| 1:44–1:51 | Use `public/video-architecture-overlay.svg` | “Bounded labels. Structured DeepSeek. Evidence checks. Names stay in the browser.” |
+| 1:51–1:54 | End card with logo, tagline, `misconception-radar-july-ai-2026.aegg42.chatgpt.site`, and the public repository URL | “Misconception Radar.” |
 
 ## Edit rules
 
@@ -50,12 +50,18 @@ in the edited wait captions.
 - [x] Capture student-feedback screenshot at 1920×1080
 - [x] Capture reteach-plan screenshot at 1920×1080
 - [x] Lock the deployed application URL in the end-card template
-- [ ] Replace the public GitHub placeholder before recording
+- [x] Replace the public GitHub placeholder before recording
 - [ ] Upload as unlisted/public with embedding enabled
 
 ## Draft recording assets
 
 - Architecture overlay: `public/video-architecture-overlay.svg`
 - End-card template: `public/video-end-card-template.svg`
-- The end card intentionally keeps one obvious GitHub placeholder. Do not use
-  it in the final export until the public repository exists.
+- The end card links to the verified public repository.
+
+## Final local candidate
+
+- File: `artifacts/video/misconception-radar-demo.mp4`
+- Runtime: 1:54
+- Format: 1920×1080, H.264 video, AAC mono audio at 48 kHz
+- QA: full decode passed; all ten narration segments fit their allocated windows

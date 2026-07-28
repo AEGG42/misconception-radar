@@ -3,6 +3,15 @@
 Freeze candidate prepared early on **2026-07-25 (Asia/Shanghai)** for the
 July 29 gate.
 
+## July 29 scope amendment
+
+The assignment picker now includes a teacher-authored custom exit ticket.
+Teachers provide the question, reference answer, four rubric look-fors, and
+three common incorrect ideas. The same anonymization, evidence-integrity,
+teacher-review, reteach, and export boundaries apply. Custom-prompt results
+are not covered by the original 30-case qualification claim; the deterministic
+fallback marks every custom result for review.
+
 ## Frozen judged flow
 
 1. Select one of three bounded physics exit tickets.
@@ -36,7 +45,8 @@ reteach focus, screenshots, and narration all describe the same signal.
 
 ## Changes not allowed after freeze
 
-- New subjects, templates, providers, agents, storage, authentication, or LMS features.
+- Further new subjects, bundled templates, providers, agents, storage,
+  authentication, or LMS features beyond the July 29 custom-ticket amendment.
 - Prompt/model changes without rerunning the three-pass live evaluation gate.
 - Claims of classroom validation or automatic grading.
 - Any workflow that sends names to the server or automatically sends feedback.
@@ -54,7 +64,7 @@ reteach focus, screenshots, and narration all describe the same signal.
 
 ## Remaining submission-only work
 
-- Publish and verify the public GitHub repository.
-- Replace the GitHub placeholder in the video end card.
-- Record, edit, upload, and verify the sub-two-minute video.
+- Publish and verify the public GitHub repository. **Completed 2026-07-28.**
+- Replace the GitHub placeholder in the video end card. **Completed 2026-07-28.**
+- Record and edit the sub-two-minute video. **Completed 2026-07-28; upload pending authenticated YouTube access.**
 - Add source/video URLs and submit the Devpost entry.

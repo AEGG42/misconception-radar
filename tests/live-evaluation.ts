@@ -8,11 +8,11 @@ import {
 } from "@/lib/domain/analysis";
 import { reteachModelOutputSchema } from "@/lib/domain/schemas";
 import { templates } from "@/lib/domain/templates";
-import type { TemplateId } from "@/lib/domain/types";
+import type { BuiltInTemplateId } from "@/lib/domain/types";
 import { getAnalysisProvider } from "@/lib/providers";
 import { evaluationCases } from "@/tests/evaluation.test";
 
-const allTemplateIds: TemplateId[] = [
+const allTemplateIds: BuiltInTemplateId[] = [
   "collision",
   "book-at-rest",
   "elevator",
@@ -70,7 +70,7 @@ describe("live provider evaluation", () => {
       let scoresWithinOne = 0;
       let integrityPasses = 0;
       const errors: Array<{
-        templateId: TemplateId;
+        templateId: BuiltInTemplateId;
         errorType: string;
         errorCategory: string;
       }> = [];

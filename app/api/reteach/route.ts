@@ -17,7 +17,10 @@ export async function POST(request: Request) {
 
   try {
     const payload = reteachRequestSchema.parse(await request.json());
-    const template = getTemplate(payload.templateId);
+    const template =
+      payload.templateId === "custom"
+        ? payload.customTemplate!
+        : getTemplate(payload.templateId);
     const misconception = template.misconceptions.find(
       (item) => item.id === payload.misconceptionId,
     );

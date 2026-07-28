@@ -1,10 +1,69 @@
 import { z } from "zod";
 
-export const templateIdSchema = z.enum([
+export const builtInTemplateIdSchema = z.enum([
   "collision",
   "book-at-rest",
   "elevator",
 ]);
+
+export const templateIdSchema = z.union([
+  builtInTemplateIdSchema,
+  z.literal("custom"),
+]);
+
+const rubricCriterionInputSchema = z.object({
+  id: z.string().trim().min(1).max(80),
+  label: z.string().trim().min(1).max(120),
+  description: z.string().trim().min(1).max(320),
+  points: z.literal(1),
+});
+
+const misconceptionInputSchema = z.object({
+  id: z.string().trim().min(1).max(80),
+  shortLabel: z.string().trim().min(1).max(48),
+  label: z.string().trim().min(1).max(180),
+  description: z.string().trim().min(1).max(420),
+  color: z.string().regex(/^#[0-9a-f]{6}$/i),
+  reteachMove: z.string().trim().min(1).max(420),
+});
+
+export const customAssignmentTemplateSchema = z
+  .object({
+    id: z.literal("custom"),
+    eyebrow: z.string().trim().min(1).max(80),
+    title: z.string().trim().min(1).max(120),
+    question: z.string().trim().min(1).max(1200),
+    referenceAnswer: z.string().trim().min(1).max(1600),
+    teacherNote: z.string().trim().max(500),
+    rubric: z.array(rubricCriterionInputSchema).length(4),
+    misconceptions: z
+      .array(misconceptionInputSchema)
+      .min(2)
+      .max(5),
+  })
+  .superRefine((template, ctx) => {
+    const rubricIds = template.rubric.map((item) => item.id);
+    if (new Set(rubricIds).size !== rubricIds.length) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Rubric criterion IDs must be unique.",
+        path: ["rubric"],
+      });
+    }
+
+    const misconceptionIds = template.misconceptions.map(
+      (item) => item.id,
+    );
+    if (
+      new Set(misconceptionIds).size !== misconceptionIds.length
+    ) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Misconception IDs must be unique.",
+        path: ["misconceptions"],
+      });
+    }
+  });
 
 export const anonymousSubmissionSchema = z.object({
   studentId: z
@@ -22,12 +81,28 @@ export const anonymousSubmissionSchema = z.object({
 export const analyzeRequestSchema = z
   .object({
     templateId: templateIdSchema,
+    customTemplate: customAssignmentTemplateSchema.optional(),
     submissions: z
       .array(anonymousSubmissionSchema)
       .min(1, "Add at least one student response.")
       .max(20, "This demo supports up to 20 responses at a time."),
   })
-  .superRefine(({ submissions }, ctx) => {
+  .superRefine(({ templateId, customTemplate, submissions }, ctx) => {
+    if (templateId === "custom" && !customTemplate) {
+      ctx.addIssue({
+        code: "custom",
+        message: "A complete custom assignment is required.",
+        path: ["customTemplate"],
+      });
+    }
+    if (templateId !== "custom" && customTemplate) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Custom assignment data is only allowed for a custom template.",
+        path: ["customTemplate"],
+      });
+    }
+
     const seen = new Set<string>();
     submissions.forEach((submission, index) => {
       const normalizedId = submission.studentId.toLowerCase();
@@ -84,14 +159,32 @@ export const reteachModelOutputSchema = z.object({
   lookFor: z.string().min(1).max(320),
 });
 
-export const reteachRequestSchema = z.object({
-  templateId: templateIdSchema,
-  misconceptionId: z.string().min(1).max(80),
-  representativeResponses: z
-    .array(z.string().trim().min(1).max(1000))
-    .min(1)
-    .max(3),
-});
+export const reteachRequestSchema = z
+  .object({
+    templateId: templateIdSchema,
+    customTemplate: customAssignmentTemplateSchema.optional(),
+    misconceptionId: z.string().min(1).max(80),
+    representativeResponses: z
+      .array(z.string().trim().min(1).max(1000))
+      .min(1)
+      .max(3),
+  })
+  .superRefine(({ templateId, customTemplate }, ctx) => {
+    if (templateId === "custom" && !customTemplate) {
+      ctx.addIssue({
+        code: "custom",
+        message: "A complete custom assignment is required.",
+        path: ["customTemplate"],
+      });
+    }
+    if (templateId !== "custom" && customTemplate) {
+      ctx.addIssue({
+        code: "custom",
+        message: "Custom assignment data is only allowed for a custom template.",
+        path: ["customTemplate"],
+      });
+    }
+  });
 
 export const sampleRequestSchema = z.object({
   templateId: z.literal("collision"),

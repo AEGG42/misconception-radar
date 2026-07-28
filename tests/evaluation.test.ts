@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 
 import { templates } from "@/lib/domain/templates";
-import type { TemplateId } from "@/lib/domain/types";
+import type { BuiltInTemplateId } from "@/lib/domain/types";
 import { DeterministicAnalysisProvider } from "@/lib/providers/deterministic-provider";
 
 export interface EvaluationCase {
-  templateId: TemplateId;
+  templateId: BuiltInTemplateId;
   response: string;
   expectedMisconception: string | null;
   expectedScore: number;

@@ -6,6 +6,8 @@ Misconception Radar is a privacy-first formative assessment workspace for high-s
 
 **Live demo:** <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>
 
+**Source code:** <https://github.com/AEGG42/misconception-radar>
+
 The judged build runs server-side DeepSeek V4 Flash for live analysis and
 reteach generation, with an explicitly labeled sample snapshot as its outage
 fallback.
@@ -18,7 +20,9 @@ Misconception Radar looks beneath each answer for a bounded, teacher-reviewed co
 
 ## Demo flow
 
-1. Choose one of three curated physics exit tickets.
+1. Choose one of three curated physics exit tickets or build a custom one.
+   Custom tickets define a prompt, reference answer, four one-point rubric
+   look-fors, and three common incorrect ideas.
 2. Load the synthetic demo class or upload a CSV with `student_id,student_name,response`.
 3. Analyze up to 20 short answers.
 4. Inspect the class misconception map and the exact response evidence behind each draft.
@@ -78,7 +82,8 @@ flowchart LR
 
 ### Core contracts
 
-- `POST /api/analyze` accepts a template ID and 1–20 anonymous responses.
+- `POST /api/analyze` accepts a built-in template ID, or a validated custom
+  template definition, plus 1–20 anonymous responses.
 - `POST /api/reteach` accepts one bounded misconception and up to three anonymous representative responses.
 - Student names never enter either request.
 - Model outputs, when enabled, must use the same Zod schema as the deterministic provider.
@@ -162,8 +167,13 @@ and runtime secrets are never written there.
 
 ## Known limitations
 
-- The MVP covers three curated forces-and-motion prompts, not arbitrary subjects.
+- The curated demo covers three forces-and-motion prompts. Teacher-created
+  prompts are supported when the teacher supplies four rubric look-fors and
+  three common incorrect ideas.
 - The deterministic provider is a demonstration baseline, not a trained ML model.
+- Deterministic analysis of custom prompts uses conservative text matching and
+  always requires teacher review; live model quality for a new prompt is not
+  pre-evaluated by the bundled 30-case set.
 - Confidence labels are instructional review signals, not calibrated probabilities.
 - Live model quality must be re-evaluated with the same cases before making accuracy claims.
 

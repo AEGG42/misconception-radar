@@ -15,6 +15,7 @@ import {
   FlaskConical,
   LoaderCircle,
   LockKeyhole,
+  PencilLine,
   Radar,
   RotateCcw,
   ShieldCheck,
@@ -40,6 +41,11 @@ import {
   parseStudentCsv,
   serializeCsvCell,
 } from "@/lib/domain/csv";
+import { CustomAssignmentBuilder } from "@/components/custom-assignment-builder";
+import {
+  createEmptyCustomTemplate,
+  customTemplateIsComplete,
+} from "@/lib/domain/custom-template";
 import { getDemoClass } from "@/lib/domain/demo-data";
 import {
   representativeResponsesFor,
@@ -47,6 +53,7 @@ import {
 import { templateList, templates } from "@/lib/domain/templates";
 import type {
   AnalysisResponse,
+  AssignmentTemplate,
   ReteachPlan,
   StudentAnalysis,
   StudentRecord,
@@ -140,7 +147,7 @@ function AssignmentPicker({
   onSelect: (id: TemplateId) => void;
 }) {
   return (
-    <div className="grid gap-2 sm:grid-cols-3">
+    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
       {templateList.map((template, index) => {
         const selected = template.id === selectedId;
         return (
@@ -173,6 +180,32 @@ function AssignmentPicker({
           </button>
         );
       })}
+      <button
+        type="button"
+        onClick={() => onSelect("custom")}
+        aria-pressed={selectedId === "custom"}
+        className={`focus-ring group rounded-2xl border p-3 text-left transition-all ${
+          selectedId === "custom"
+            ? "border-[#14201f] bg-[#14201f] text-white shadow-lg"
+            : "border-dashed border-[#a8aba2] bg-[#f4f1e9] hover:-translate-y-0.5 hover:border-[#14201f]"
+        }`}
+      >
+        <span
+          className={`mb-3 grid size-7 place-items-center rounded-full ${
+            selectedId === "custom"
+              ? "bg-[#d7fa62] text-[#14201f]"
+              : "bg-white text-[#5d6765]"
+          }`}
+        >
+          <PencilLine className="size-3.5" />
+        </span>
+        <span className="block text-[10px] font-bold uppercase tracking-[0.14em] opacity-65">
+          Your curriculum
+        </span>
+        <span className="mt-1 block text-sm font-bold leading-tight">
+          Custom exit ticket
+        </span>
+      </button>
     </div>
   );
 }
@@ -205,9 +238,11 @@ function LoadingOverlay() {
 
 function SetupWorkspace({
   templateId,
+  customTemplate,
   records,
   csvErrors,
   onTemplateChange,
+  onCustomTemplateChange,
   onLoadDemo,
   onFileChange,
   onRemoveRecord,
@@ -216,9 +251,11 @@ function SetupWorkspace({
   isAnalyzing,
 }: {
   templateId: TemplateId;
+  customTemplate: AssignmentTemplate;
   records: StudentRecord[];
   csvErrors: string[];
   onTemplateChange: (id: TemplateId) => void;
+  onCustomTemplateChange: (template: AssignmentTemplate) => void;
   onLoadDemo: () => void;
   onFileChange: (event: ChangeEvent<HTMLInputElement>) => void;
   onRemoveRecord: (studentId: string) => void;
@@ -226,7 +263,10 @@ function SetupWorkspace({
   onUseSnapshot: () => void;
   isAnalyzing: boolean;
 }) {
-  const template = templates[templateId];
+  const template =
+    templateId === "custom" ? customTemplate : templates[templateId];
+  const customComplete =
+    templateId !== "custom" || customTemplateIsComplete(customTemplate);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   return (
@@ -289,6 +329,12 @@ function SetupWorkspace({
               onSelect={onTemplateChange}
             />
 
+            {templateId === "custom" ? (
+              <CustomAssignmentBuilder
+                template={customTemplate}
+                onChange={onCustomTemplateChange}
+              />
+            ) : (
             <div className="mt-5 rounded-2xl border border-[#d9d7ce] bg-[#f4f1e9] p-5">
               <div className="flex items-center justify-between gap-3">
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.16em] text-[#6a736f]">
@@ -321,6 +367,7 @@ function SetupWorkspace({
                 </ul>
               </details>
             </div>
+            )}
           </div>
 
           <div className="card-shadow rounded-[28px] border border-[#d9d7ce] bg-[#fffdf7] p-5 md:p-7">
@@ -339,7 +386,12 @@ function SetupWorkspace({
             </div>
 
             {records.length === 0 ? (
-              <div className="grid gap-3 sm:grid-cols-2">
+              <div
+                className={`grid gap-3 ${
+                  templateId === "custom" ? "" : "sm:grid-cols-2"
+                }`}
+              >
+                {templateId !== "custom" && (
                 <button
                   type="button"
                   onClick={onLoadDemo}
@@ -357,6 +409,7 @@ function SetupWorkspace({
                     misconception patterns.
                   </p>
                 </button>
+                )}
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -496,7 +549,11 @@ function SetupWorkspace({
               <button
                 type="button"
                 onClick={onAnalyze}
-                disabled={records.length === 0 || isAnalyzing}
+                disabled={
+                  records.length === 0 ||
+                  isAnalyzing ||
+                  !customComplete
+                }
                 className="focus-ring flex flex-1 items-center justify-center gap-2 rounded-full bg-[#14201f] px-5 py-3.5 text-sm font-extrabold text-white transition-all hover:bg-[#253331] disabled:bg-[#b4b8b1]"
               >
                 {isAnalyzing ? (
@@ -518,6 +575,11 @@ function SetupWorkspace({
                 </button>
               )}
             </div>
+            {!customComplete && (
+              <p className="mt-2 text-center text-[11px] font-semibold text-[#8a5a18]">
+                Complete the custom exit ticket before analyzing responses.
+              </p>
+            )}
           </div>
         </section>
 
@@ -572,7 +634,7 @@ function MetricCard({
 function StudentDetail({
   student,
   analysis,
-  templateId,
+  template,
   feedback,
   approved,
   onFeedbackChange,
@@ -580,13 +642,12 @@ function StudentDetail({
 }: {
   student: StudentRecord;
   analysis: StudentAnalysis;
-  templateId: TemplateId;
+  template: AssignmentTemplate;
   feedback: string;
   approved: boolean;
   onFeedbackChange: (value: string) => void;
   onApprove: () => void;
 }) {
-  const template = templates[templateId];
   const misconception = template.misconceptions.find(
     (item) => item.id === analysis.primaryMisconceptionId,
   );
@@ -740,11 +801,13 @@ function StudentDetail({
 
 function ReteachPanel({
   templateId,
+  template,
   selectedMisconceptionId,
   analysis,
   records,
 }: {
   templateId: TemplateId;
+  template: AssignmentTemplate;
   selectedMisconceptionId: string | null;
   analysis: AnalysisResponse;
   records: StudentRecord[];
@@ -752,7 +815,6 @@ function ReteachPanel({
   const [plan, setPlan] = useState<ReteachPlan | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const template = templates[templateId];
   const misconception = template.misconceptions.find(
     (item) => item.id === selectedMisconceptionId,
   );
@@ -776,6 +838,9 @@ function ReteachPanel({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           templateId,
+          ...(templateId === "custom"
+            ? { customTemplate: template }
+            : {}),
           misconceptionId: misconception.id,
           representativeResponses:
             responses.length > 0 ? responses : [records[0]?.response],
@@ -924,16 +989,17 @@ function ReteachPanel({
 
 function ResultsDashboard({
   templateId,
+  template,
   records,
   analysis,
   onReset,
 }: {
   templateId: TemplateId;
+  template: AssignmentTemplate;
   records: StudentRecord[];
   analysis: AnalysisResponse;
   onReset: () => void;
 }) {
-  const template = templates[templateId];
   const [selectedStudentId, setSelectedStudentId] = useState(() => {
     const topMisconceptionStudent = analysis.summary.topMisconceptionId
       ? analysis.students.find(
@@ -1313,6 +1379,7 @@ function ResultsDashboard({
             <ReteachPanel
               key={selectedMisconceptionId}
               templateId={templateId}
+              template={template}
               selectedMisconceptionId={selectedMisconceptionId}
               analysis={analysis}
               records={records}
@@ -1320,7 +1387,7 @@ function ResultsDashboard({
             <StudentDetail
               student={selectedStudent}
               analysis={selectedStudentAnalysis}
-              templateId={templateId}
+              template={template}
               feedback={
                 feedbackEdits[selectedStudentId] ??
                 selectedStudentAnalysis.feedbackDraft
@@ -1364,11 +1431,15 @@ export function MisconceptionRadar() {
   const [step, setStep] = useState<AppStep>("setup");
   const [templateId, setTemplateId] =
     useState<TemplateId>("collision");
+  const [customTemplate, setCustomTemplate] =
+    useState<AssignmentTemplate>(() => createEmptyCustomTemplate());
   const [records, setRecords] = useState<StudentRecord[]>([]);
   const [csvErrors, setCsvErrors] = useState<string[]>([]);
   const [analysis, setAnalysis] = useState<AnalysisResponse | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [appError, setAppError] = useState<string | null>(null);
+  const activeTemplate =
+    templateId === "custom" ? customTemplate : templates[templateId];
 
   function changeTemplate(nextId: TemplateId) {
     setTemplateId(nextId);
@@ -1379,6 +1450,9 @@ export function MisconceptionRadar() {
   }
 
   function loadDemo() {
+    if (templateId === "custom") {
+      return;
+    }
     setRecords(getDemoClass(templateId));
     setCsvErrors([]);
     setAppError(null);
@@ -1400,7 +1474,11 @@ export function MisconceptionRadar() {
   }
 
   async function analyzeClass() {
-    if (records.length === 0) {
+    if (
+      records.length === 0 ||
+      (templateId === "custom" &&
+        !customTemplateIsComplete(customTemplate))
+    ) {
       return;
     }
 
@@ -1412,6 +1490,9 @@ export function MisconceptionRadar() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           templateId,
+          ...(templateId === "custom"
+            ? { customTemplate }
+            : {}),
           submissions: anonymizeRecords(records),
         }),
       });
@@ -1512,9 +1593,15 @@ export function MisconceptionRadar() {
       {step === "setup" || !analysis ? (
         <SetupWorkspace
           templateId={templateId}
+          customTemplate={customTemplate}
           records={records}
           csvErrors={csvErrors}
           onTemplateChange={changeTemplate}
+          onCustomTemplateChange={(template) => {
+            setCustomTemplate(template);
+            setAnalysis(null);
+            setAppError(null);
+          }}
           onLoadDemo={loadDemo}
           onFileChange={handleFileChange}
           onRemoveRecord={(studentId) =>
@@ -1529,6 +1616,7 @@ export function MisconceptionRadar() {
       ) : (
         <ResultsDashboard
           templateId={templateId}
+          template={activeTemplate}
           records={records}
           analysis={analysis}
           onReset={reset}

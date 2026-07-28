@@ -210,20 +210,106 @@ function elevatorCriteria(text: string): boolean[] {
   return [tension, weight, equal, acceleration];
 }
 
-function criteriaFor(templateId: string, text: string): boolean[] {
-  if (templateId === "collision") {
+const genericStopWords = new Set([
+  "about",
+  "because",
+  "correct",
+  "does",
+  "from",
+  "have",
+  "identifies",
+  "into",
+  "that",
+  "their",
+  "there",
+  "these",
+  "they",
+  "this",
+  "with",
+  "学生",
+  "说明",
+  "认为",
+  "回答",
+  "能够",
+  "应该",
+]);
+
+function meaningfulTokens(value: string): Set<string> {
+  const normalized = value.normalize("NFKC").toLowerCase();
+  const tokens = new Set<string>();
+
+  for (const match of normalized.matchAll(/[\p{L}\p{N}]+/gu)) {
+    const token = match[0];
+    if (/^[\u3400-\u9fff]+$/u.test(token)) {
+      if (token.length === 1) {
+        tokens.add(token);
+      } else {
+        for (let index = 0; index < token.length - 1; index += 1) {
+          tokens.add(token.slice(index, index + 2));
+        }
+      }
+    } else if (token.length >= 3 && !genericStopWords.has(token)) {
+      tokens.add(token);
+    }
+  }
+
+  return tokens;
+}
+
+function overlapScore(response: string, signal: string): number {
+  const responseTokens = meaningfulTokens(response);
+  return [...meaningfulTokens(signal)].filter((token) =>
+    responseTokens.has(token),
+  ).length;
+}
+
+function customCriteria(
+  template: AssignmentTemplate,
+  text: string,
+): boolean[] {
+  return template.rubric.map(
+    (criterion) =>
+      overlapScore(
+        text,
+        `${criterion.label} ${criterion.description}`,
+      ) >= 1,
+  );
+}
+
+function criteriaFor(
+  template: AssignmentTemplate,
+  text: string,
+): boolean[] {
+  if (template.id === "collision") {
     return collisionCriteria(text);
   }
-  if (templateId === "book-at-rest") {
+  if (template.id === "book-at-rest") {
     return bookCriteria(text);
   }
-  return elevatorCriteria(text);
+  if (template.id === "elevator") {
+    return elevatorCriteria(text);
+  }
+  return customCriteria(template, text);
 }
 
 function findMisconceptions(
   template: AssignmentTemplate,
   response: string,
 ): string[] {
+  if (template.id === "custom") {
+    return template.misconceptions
+      .map((misconception) => ({
+        id: misconception.id,
+        score: overlapScore(
+          response,
+          `${misconception.shortLabel} ${misconception.label} ${misconception.description}`,
+        ),
+      }))
+      .filter((candidate) => candidate.score >= 2)
+      .sort((a, b) => b.score - a.score)
+      .map((candidate) => candidate.id);
+  }
+
   const rules = misconceptionPatterns[template.id] ?? [];
   return rules
     .filter((rule) => rule.patterns.some((pattern) => has(response, pattern)))
@@ -235,12 +321,14 @@ function assess(
   response: string,
 ): Assessment {
   const misconceptions = findMisconceptions(template, response);
-  const criteriaMet = criteriaFor(template.id, response);
+  const criteriaMet = criteriaFor(template, response);
   const metCount = criteriaMet.filter(Boolean).length;
   const hasMixedReasoning = misconceptions.length > 0 && metCount > 0;
 
   let confidence: Confidence = "high";
-  if (misconceptions.length === 0 && metCount < 2) {
+  if (template.id === "custom") {
+    confidence = "low";
+  } else if (misconceptions.length === 0 && metCount < 2) {
     confidence = "low";
   } else if (hasMixedReasoning || misconceptions.length > 1) {
     confidence = "medium";
@@ -334,6 +422,7 @@ function analyzeOne(
     0,
   );
   const needsReview =
+    template.id === "custom" ||
     assessment.confidence !== "high" ||
     rubricScore === 2 ||
     (assessment.primaryMisconceptionId === null && rubricScore < 3);

@@ -1,6 +1,6 @@
 # Submission release checklist
 
-Last reviewed: **2026-07-25 (Asia/Shanghai)**
+Last reviewed: **2026-07-28 (Asia/Shanghai)**
 
 ## Schedule progress
 
@@ -20,11 +20,11 @@ Last reviewed: **2026-07-25 (Asia/Shanghai)**
 
 ## External release gates
 
-- [ ] Publish the source to a public GitHub repository and verify it while logged out.
+- [x] Publish the source to a public GitHub repository and verify it while logged out: <https://github.com/AEGG42/misconception-radar>
 - [x] Add a server-side DeepSeek credential without committing or exposing it.
 - [x] Run the 30-case DeepSeek evaluation three times and record accuracy, score tolerance, variance, latency, and model name. Passed on July 25: 100% misconception match, 96.67% score tolerance, and 100% integrity in every run.
 - [x] Enable DeepSeek in the judged build only if every acceptance threshold passes. Production version 5 uses environment revision 2.
-- [ ] Record and edit the final 1:54 demo video.
+- [x] Record and edit the final 1:54 demo video. Local candidate: `artifacts/video/misconception-radar-demo.mp4`.
 - [ ] Upload the video to YouTube, Vimeo, or Youku with embedding enabled.
 - [ ] Add the public source and video URLs to the app end card, README, and Devpost draft.
 - [ ] Complete and submit the Devpost entry.

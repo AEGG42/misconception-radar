@@ -30,7 +30,10 @@ export async function POST(request: Request) {
     }
 
     const payload = analyzeRequestSchema.parse(await request.json());
-    const template = getTemplate(payload.templateId);
+    const template =
+      payload.templateId === "custom"
+        ? payload.customTemplate!
+        : getTemplate(payload.templateId);
     const provider = await getAnalysisProvider();
     const rawAnalyses = await provider.analyze(
       template,

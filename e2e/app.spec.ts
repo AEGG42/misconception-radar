@@ -132,6 +132,95 @@ test("a valid CSV stays anonymous through analysis and teacher review", async ({
   ).toBeVisible();
 });
 
+test("a teacher can define and analyze a custom exit ticket", async ({
+  page,
+}) => {
+  await page.goto("/");
+  await page
+    .getByRole("button", { name: /Custom exit ticket/i })
+    .click();
+
+  const analyzeButton = page.getByRole("button", {
+    name: /Analyze class/i,
+  });
+  await expect(
+    page.getByText("Build your exit ticket"),
+  ).toBeVisible();
+  await expect(analyzeButton).toBeDisabled();
+
+  await page
+    .getByLabel("Assignment title")
+    .fill("Energy transfer");
+  await page
+    .getByLabel("Question", { exact: true })
+    .fill("A cart rolls down a ramp. Explain how its energy changes.");
+  await page
+    .getByLabel("Reference answer")
+    .fill(
+      "Gravitational potential energy decreases while kinetic energy increases; total energy is conserved.",
+    );
+
+  const lookFors = [
+    "Identifies gravitational potential energy",
+    "Identifies kinetic energy",
+    "Describes an energy transfer",
+    "States that total energy is conserved",
+  ];
+  for (const [index, lookFor] of lookFors.entries()) {
+    await page.getByLabel(`Look-for ${index + 1}`).fill(lookFor);
+  }
+
+  const incorrectIdeas = [
+    "Energy disappears as the cart moves",
+    "The cart creates new energy",
+    "Only kinetic energy exists on the ramp",
+  ];
+  for (const [index, incorrectIdea] of incorrectIdeas.entries()) {
+    await page
+      .getByLabel(`Common incorrect idea ${index + 1}`)
+      .fill(incorrectIdea);
+  }
+
+  await expect(page.getByText("Ready", { exact: true })).toBeVisible();
+  await page.getByLabel("Upload student response CSV").setInputFiles({
+    name: "custom-class.csv",
+    mimeType: "text/csv",
+    buffer: Buffer.from(
+      [
+        "student_id,student_name,response",
+        'C-01,Ada,"The cart speeds up because its energy disappears as it moves."',
+      ].join("\n"),
+    ),
+  });
+
+  const analyzeRequestPromise = page.waitForRequest("**/api/analyze");
+  await analyzeButton.click();
+  const requestBody = (
+    await analyzeRequestPromise
+  ).postDataJSON() as {
+    templateId: string;
+    customTemplate: { title: string };
+    submissions: Array<Record<string, string>>;
+  };
+
+  expect(requestBody.templateId).toBe("custom");
+  expect(requestBody.customTemplate.title).toBe("Energy transfer");
+  expect(requestBody.submissions).toEqual([
+    {
+      studentId: "C-01",
+      response:
+        "The cart speeds up because its energy disappears as it moves.",
+    },
+  ]);
+  expect(JSON.stringify(requestBody)).not.toContain("Ada");
+
+  await expect(page.getByText("Misconception map")).toBeVisible();
+  await expect(
+    page.getByText("Energy disappears as the cart moves").first(),
+  ).toBeVisible();
+  await expect(page.getByText("Review", { exact: true }).first()).toBeVisible();
+});
+
 test("an invalid CSV reports actionable errors and preserves setup", async ({
   page,
 }) => {

@@ -1,4 +1,9 @@
-export type TemplateId = "collision" | "book-at-rest" | "elevator";
+export type BuiltInTemplateId =
+  | "collision"
+  | "book-at-rest"
+  | "elevator";
+
+export type TemplateId = BuiltInTemplateId | "custom";
 
 export type Confidence = "high" | "medium" | "low";
 

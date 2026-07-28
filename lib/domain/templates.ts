@@ -1,7 +1,7 @@
 import type {
   AssignmentTemplate,
+  BuiltInTemplateId,
   MisconceptionDefinition,
-  TemplateId,
 } from "@/lib/domain/types";
 
 const palette = {
@@ -17,7 +17,7 @@ const misconception = (
   definition: MisconceptionDefinition,
 ): MisconceptionDefinition => definition;
 
-export const templates: Record<TemplateId, AssignmentTemplate> = {
+export const templates: Record<BuiltInTemplateId, AssignmentTemplate> = {
   collision: {
     id: "collision",
     eyebrow: "Newton's third law",
@@ -289,6 +289,6 @@ export const templates: Record<TemplateId, AssignmentTemplate> = {
 
 export const templateList = Object.values(templates);
 
-export function getTemplate(id: TemplateId): AssignmentTemplate {
+export function getTemplate(id: BuiltInTemplateId): AssignmentTemplate {
   return templates[id];
 }

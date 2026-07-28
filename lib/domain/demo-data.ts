@@ -1,6 +1,9 @@
-import type { StudentRecord, TemplateId } from "@/lib/domain/types";
+import type {
+  BuiltInTemplateId,
+  StudentRecord,
+} from "@/lib/domain/types";
 
-export const demoClasses: Record<TemplateId, StudentRecord[]> = {
+export const demoClasses: Record<BuiltInTemplateId, StudentRecord[]> = {
   collision: [
     {
       studentId: "S-01",
@@ -115,6 +118,8 @@ export const demoClasses: Record<TemplateId, StudentRecord[]> = {
   ],
 };
 
-export function getDemoClass(templateId: TemplateId): StudentRecord[] {
+export function getDemoClass(
+  templateId: BuiltInTemplateId,
+): StudentRecord[] {
   return demoClasses[templateId].map((student) => ({ ...student }));
 }

@@ -11,7 +11,7 @@ Turn short answers into evidence-backed misconception clusters and a targeted re
 ## Links
 
 - Application: <https://misconception-radar-july-ai-2026.aegg42.chatgpt.site>
-- Source code: **add public GitHub URL before submission**
+- Source code: <https://github.com/AEGG42/misconception-radar>
 - Demo video: **add embeddable video URL before submission**
 
 ## Inspiration
@@ -80,10 +80,10 @@ Next.js, React, TypeScript, Tailwind CSS, Zod, Papa Parse, Recharts, Vitest, Pla
 ## Submission checklist
 
 - [x] Add public application URL
-- [ ] Add public GitHub URL
+- [x] Add public GitHub URL
 - [ ] Upload `public/devpost-thumbnail.png` as the 3:2 thumbnail
 - [x] Prepare dashboard, student-feedback, and reteach screenshots
 - [ ] Upload the three prepared screenshots to Devpost
 - [ ] Add final YouTube/Vimeo/Youku URL with embedding enabled
-- [ ] Confirm video runtime is below 2:00
+- [x] Confirm video runtime is below 2:00: 1:54, 1920×1080, H.264/AAC
 - [ ] Submit before 2026-07-30 23:45 EDT
